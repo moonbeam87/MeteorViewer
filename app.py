@@ -1,4 +1,5 @@
 import plotly.graph_objects as go
+import plotly.express as px
 import pandas as pd
 #import meteorData
 
@@ -9,6 +10,9 @@ df = pd.read_csv('https://raw.githubusercontent.com/moonbeam87/MeteorViewer/mast
 site_lat = df.reclat
 site_lon = df.reclong
 locations_name = df.name
+locations_nameType = df.nametype
+mass = df.mass
+recclass = df.recclass
 
 fig = go.Figure()
 
@@ -18,13 +22,13 @@ fig.add_trace(go.Scattermapbox(
         mode='markers',
         marker=go.scattermapbox.Marker(
             size=17,
-            color='rgb(255, 0, 0)',
+            color=mass,
             opacity=0.7
         ),
         text=locations_name,
         hoverinfo='text'
     ))
-"""
+
 fig.add_trace(go.Scattermapbox(
         lat=site_lat,
         lon=site_lon,
@@ -36,12 +40,12 @@ fig.add_trace(go.Scattermapbox(
         ),
         hoverinfo='none'
     ))
-"""
+
 fig.update_layout(
     title='Meteor Strikes Across the world',
     autosize=True,
     hovermode='closest',
-    showlegend=False,
+    showlegend=True,
     mapbox=dict(
         accesstoken=mapbox_access_token,
         bearing=0,
