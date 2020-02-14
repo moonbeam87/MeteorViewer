@@ -1,45 +1,58 @@
 import plotly.graph_objects as go
-
 import pandas as pd
+#import meteorData
 
-df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/2011_february_us_airport_traffic.csv')
-df['text'] = df['airport'] + '' + df['city'] + ', ' + df['state'] + '' + 'Arrivals: ' + df['cnt'].astype(str)
+mapbox_access_token = "pk.eyJ1IjoibW9vbmJlYW04NyIsImEiOiJjazZsajRsamwwMjJuM21udjhvZzBwcnN6In0.85-_7ylp9qSaMlAvrFpRRg"
+##replace Link with MeteorData.csv
+df = pd.read_csv('https://raw.githubusercontent.com/moonbeam87/MeteorViewer/master/meteorData.csv')
+#df = pd.read(meteorData.csv)
+site_lat = df.reclat
+site_lon = df.reclong
+locations_name = df.name
 
+fig = go.Figure()
 
-fig = go.Figure(data=go.Scattergeo(
-        locationmode = 'USA-states',
-        lon = df['long'],
-        lat = df['lat'],
-        text = df['text'],
-        mode = 'markers',
-        marker = dict(
-            size = 8,
-            opacity = 0.8,
-            reversescale = True,
-            autocolorscale = False,
-            symbol = 'square',
-            line = dict(
-                width=1,
-                color='rgba(102, 102, 102)'
-            ),
-            colorscale = 'Blues',
-            cmin = 0,
-            color = df['cnt'],
-            cmax = df['cnt'].max(),
-            colorbar_title="Incoming flights<br>February 2011"
-        )))
-
-fig.update_layout(
-        title = 'Most trafficked US airports<br>(Hover for airport names)',
-        geo = dict(
-            scope='usa',
-            projection_type='albers usa',
-            showland = True,
-            landcolor = "rgb(250, 250, 250)",
-            subunitcolor = "rgb(217, 217, 217)",
-            countrycolor = "rgb(217, 217, 217)",
-            countrywidth = 0.5,
-            subunitwidth = 0.5
+fig.add_trace(go.Scattermapbox(
+        lat=site_lat,
+        lon=site_lon,
+        mode='markers',
+        marker=go.scattermapbox.Marker(
+            size=17,
+            color='rgb(255, 0, 0)',
+            opacity=0.7
         ),
-    )
+        text=locations_name,
+        hoverinfo='text'
+    ))
+"""
+fig.add_trace(go.Scattermapbox(
+        lat=site_lat,
+        lon=site_lon,
+        mode='markers',
+        marker=go.scattermapbox.Marker(
+            size=8,
+            color='rgb(242, 177, 172)',
+            opacity=0.7
+        ),
+        hoverinfo='none'
+    ))
+"""
+fig.update_layout(
+    title='Meteor Strikes Across the world',
+    autosize=True,
+    hovermode='closest',
+    showlegend=False,
+    mapbox=dict(
+        accesstoken=mapbox_access_token,
+        bearing=0,
+        center=dict(
+            lat=38,
+            lon=-94
+        ),
+        pitch=0,
+        zoom=3,
+        style='light'
+    ),
+)
+
 fig.show()
