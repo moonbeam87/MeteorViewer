@@ -1,3 +1,6 @@
+import dash
+import dash_core_components as dcc
+import dash_html_components as html
 import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
@@ -13,8 +16,18 @@ locations_name = df.name
 locations_nameType = df.nametype
 mass = df.mass
 recclass = df.recclass
-
+colorIdentifier = mass
 fig = go.Figure()
+def update_point(trace, points, selector):
+    c = list(scatter.marker.color)
+    s = list(scatter.marker.size)
+    for i in points.point_inds:
+        c[i] = '#bae2be'
+        s[i] = 20
+        with fig.batch_update():
+            scatter.marker.color = c
+            scatter.marker.size = s
+
 
 fig.add_trace(go.Scattermapbox(
         lat=site_lat,
@@ -22,13 +35,13 @@ fig.add_trace(go.Scattermapbox(
         mode='markers',
         marker=go.scattermapbox.Marker(
             size=17,
-            color=mass,
+            color=colorIdentifier,
             opacity=0.7
         ),
         text=locations_name,
         hoverinfo='text'
     ))
-
+"""
 fig.add_trace(go.Scattermapbox(
         lat=site_lat,
         lon=site_lon,
@@ -38,14 +51,14 @@ fig.add_trace(go.Scattermapbox(
             color='rgb(242, 177, 172)',
             opacity=0.7
         ),
-        hoverinfo='none'
+        hoverinfo='text'
     ))
-
+"""
 fig.update_layout(
-    title='Meteor Strikes Across the world',
+    title='',
     autosize=True,
     hovermode='closest',
-    showlegend=True,
+    showlegend=False,
     mapbox=dict(
         accesstoken=mapbox_access_token,
         bearing=0,
@@ -55,8 +68,25 @@ fig.update_layout(
         ),
         pitch=0,
         zoom=3,
-        style='light'
+        style='dark'
     ),
 )
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-fig.show()
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+
+app.layout = html.Div(children=[
+    html.H1(children='Meteor Viewer'),
+
+    html.Div(children='''
+        Meteor Viewer: A web application that allows you to see all meteor strikes!.
+    '''),
+
+    dcc.Graph(
+        id='my-graph',
+        figure = fig
+    )
+])
+
+if __name__ == '__main__':
+    app.run_server(debug=True)
