@@ -4,14 +4,8 @@ import dash_html_components as html
 import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
-
 external_stylesheets = ['https://codepen.io/moonbeam87/pen/bGdpwYe.css']
-
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-
-
-
-
 #import meteorData
 mapbox_access_token = "pk.eyJ1IjoibW9vbmJlYW04NyIsImEiOiJjazZsajRsamwwMjJuM21udjhvZzBwcnN6In0.85-_7ylp9qSaMlAvrFpRRg"
 ##replace Link with MeteorData.csv
@@ -85,7 +79,7 @@ fig.update_layout(
 app.layout = html.Div(children=[
     html.H1(children='Meteor Viewer'),
 
-    html.H3(children='''
+    html.H2(children='''
         Meteor Viewer: A web application that allows you to see all meteor strikes!.
     '''),
 
