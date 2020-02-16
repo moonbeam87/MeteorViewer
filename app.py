@@ -4,8 +4,15 @@ import dash_html_components as html
 import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
-#import meteorData
 
+external_stylesheets = ['https://codepen.io/moonbeam87/pen/bGdpwYe.css']
+
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+
+
+
+
+#import meteorData
 mapbox_access_token = "pk.eyJ1IjoibW9vbmJlYW04NyIsImEiOiJjazZsajRsamwwMjJuM21udjhvZzBwcnN6In0.85-_7ylp9qSaMlAvrFpRRg"
 ##replace Link with MeteorData.csv
 df = pd.read_csv('https://raw.githubusercontent.com/moonbeam87/MeteorViewer/master/meteorData.csv')
@@ -18,6 +25,7 @@ mass = df.mass
 recclass = df.recclass
 colorIdentifier = mass
 fig = go.Figure()
+#Current doesn't do anything on click :(
 def update_point(trace, points, selector):
     c = list(scatter.marker.color)
     s = list(scatter.marker.size)
@@ -27,8 +35,7 @@ def update_point(trace, points, selector):
         with fig.batch_update():
             scatter.marker.color = c
             scatter.marker.size = s
-
-
+#Placing a point on the graph
 fig.add_trace(go.Scattermapbox(
         lat=site_lat,
         lon=site_lon,
@@ -40,7 +47,9 @@ fig.add_trace(go.Scattermapbox(
         ),
         text=locations_name,
         hoverinfo='text'
-    ))
+    )
+)
+#Contrast on trace (Not enabled currently)
 """
 fig.add_trace(go.Scattermapbox(
         lat=site_lat,
@@ -54,6 +63,7 @@ fig.add_trace(go.Scattermapbox(
         hoverinfo='text'
     ))
 """
+#Update on resize
 fig.update_layout(
     title='',
     autosize=True,
@@ -71,14 +81,11 @@ fig.update_layout(
         style='dark'
     ),
 )
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-
+#Dash App Layout
 app.layout = html.Div(children=[
     html.H1(children='Meteor Viewer'),
 
-    html.Div(children='''
+    html.H3(children='''
         Meteor Viewer: A web application that allows you to see all meteor strikes!.
     '''),
 
@@ -87,6 +94,6 @@ app.layout = html.Div(children=[
         figure = fig
     )
 ])
-
+#Run App
 if __name__ == '__main__':
     app.run_server(debug=True)
