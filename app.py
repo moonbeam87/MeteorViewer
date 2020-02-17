@@ -4,6 +4,10 @@ import dash_html_components as html
 import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
+
+from plotly.subplots import make_subplots
+
+
 external_stylesheets = ['https://codepen.io/moonbeam87/pen/bGdpwYe.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 #import meteorData
@@ -72,8 +76,44 @@ fig.update_layout(
         ),
         pitch=0,
         zoom=3,
-        style='dark'
+        style='mapbox://styles/srepho/cjttho6dl0hl91fmzwyicqkzf'
     ),
+)
+
+fig1 = make_subplots(
+    rows=2, cols=1,
+    shared_xaxes=True,
+    vertical_spacing=0.03,
+    specs=[[{"type": "table"}],
+           [{"type": "box"}]]
+)
+fig1.add_trace(
+    go.Box(
+        x=mass,
+        name="Asteroid Mass Box Plot"
+    ),
+    row=2, col=1
+)
+
+fig1.add_trace(
+    go.Table(
+        header=dict(
+            values=["Date", "Number<br>Transactions", "Output<br>Volume (BTC)",
+                    "Market<br>Price", "Hash<br>Rate", "Cost per<br>trans-USD",
+                    "Mining<br>Revenue-USD", "Trasaction<br>fees-BTC"],
+            font=dict(size=10),
+            align="left"
+        ),
+        cells=dict(
+            values=[df[k].tolist() for k in df.columns[1:]],
+            align = "left")
+    ),
+    row=1, col=1
+)
+fig1.update_layout(
+    height=800,
+    showlegend=False,
+    title_text="Meteor Data from 1850-2020",
 )
 #Dash App Layout
 app.layout = html.Div(children=[
@@ -86,7 +126,26 @@ app.layout = html.Div(children=[
     dcc.Graph(
         id='my-graph',
         figure = fig
-    )
+    ),
+    html.H2(children = ''' '''),
+    #Deprecated Dropdown menu
+    """
+    dcc.Dropdown(
+    options=[
+        {'label': 'Sort by Mass', 'value': 'mass'},
+        {'label': 'Sort by Fall (fell vs found)', 'value': 'fall'},
+        {'label': 'Sort by Year', 'value': 'year'},
+        {'label': 'Sort by Name', 'value': 'name'},
+    ],
+    value='name',
+    clearable=False
+    ),
+    """,
+    dcc.Graph(
+        id='my-graph-2',
+        figure = fig1
+    ),
+    
 ])
 #Run App
 if __name__ == '__main__':
