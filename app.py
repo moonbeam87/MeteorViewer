@@ -98,15 +98,15 @@ fig1.add_trace(
 fig1.add_trace(
     go.Table(
         header=dict(
-            values=["Date", "Number<br>Transactions", "Output<br>Volume (BTC)",
-                    "Market<br>Price", "Hash<br>Rate", "Cost per<br>trans-USD",
-                    "Mining<br>Revenue-USD", "Trasaction<br>fees-BTC"],
+            values=["name", "id", "nametype", "recclass", "mass", "fall"
+                    , "date", "reclat", "reclong"],
             font=dict(size=10),
             align="left"
         ),
         cells=dict(
-            values=[df[k].tolist() for k in df.columns[1:]],
-            align = "left")
+            values=[df[k].tolist() for k in df.columns[0:9]],
+            align = "left"),
+        sorted = True
     ),
     row=1, col=1
 )
