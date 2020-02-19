@@ -8,12 +8,12 @@ import pandas as pd
 from plotly.subplots import make_subplots
 
 
-external_stylesheets = ['https://codepen.io/moonbeam87/pen/bGdpwYe.css']
+external_stylesheets = ['https://codepen.io/chriddyp/pen/dZVMbK.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 #import meteorData
 mapbox_access_token = "pk.eyJ1IjoibW9vbmJlYW04NyIsImEiOiJjazZsajRsamwwMjJuM21udjhvZzBwcnN6In0.85-_7ylp9qSaMlAvrFpRRg"
 ##replace Link with MeteorData.csv
-df = pd.read_csv('https://raw.githubusercontent.com/moonbeam87/MeteorViewer/master/meteorData.csv')
+df = pd.read_csv('https://raw.githubusercontent.com/moonbeam87/MeteorViewer/master/meteorDataNew.csv')
 #df = pd.read(meteorData.csv)
 site_lat = df.reclat
 site_lon = df.reclong
@@ -24,8 +24,8 @@ year = df.year
 recclass = df.recclass
 colorIdentifier = mass
 px.set_mapbox_access_token(mapbox_access_token)
-fig = px.scatter_mapbox(df, lat="reclat", lon="reclong", color="mass", mapbox_style= "dark",
-    color_continuous_scale=px.colors.cyclical.IceFire, size_max=35, zoom=10)
+fig = px.scatter_mapbox(df, lat="reclat", lon="reclong", color="mass", mapbox_style= "light",size="mass",
+    color_continuous_scale=px.colors.cyclical.HSV, size_max=100, zoom=1)
 #Current doesn't do anything on click :(
 def update_point(trace, points, selector):
     c = list(scatter.marker.color)
