@@ -24,8 +24,8 @@ year = df.year
 recclass = df.recclass
 colorIdentifier = mass
 px.set_mapbox_access_token(mapbox_access_token)
-fig = px.scatter_mapbox(df, lat="reclat", lon="reclong", color="mass", mapbox_style= "light",size="mass",
-    color_continuous_scale=px.colors.cyclical.HSV, size_max=100, zoom=1)
+fig = px.scatter_mapbox(df, title="Meteor Strikes Visualized by Mass",lat="reclat", lon="reclong", color="mass", mapbox_style= "light",size="mass", hover_name="name",
+    color_continuous_scale=px.colors.cyclical.HSV, size_max=150,zoom=0)
 #Current doesn't do anything on click :(
 def update_point(trace, points, selector):
     c = list(scatter.marker.color)
@@ -161,6 +161,12 @@ app.layout = html.Div(children=[
 
     html.H2(children='''
         Meteor Viewer: A web application that allows you to see all meteor strikes!.
+    '''),
+    html.H3(children='''
+        New Features: Size Bubble on MapBox Plot, Violin Plot
+    '''),
+    html.H3(children='''
+        Upcoming Features: API, Location filtering
     '''),
 
     dcc.Graph(
