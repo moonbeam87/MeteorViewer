@@ -20,9 +20,11 @@ site_lon = df.reclong
 locations_name = df.name
 locations_nameType = df.nametype
 mass = df.mass
+year = df.year
 recclass = df.recclass
 colorIdentifier = mass
-fig = go.Figure()
+fig = px.scatter_mapbox(df, lat="reclat", lon="reclong", color="mass", size="mass",
+    color_continuous_scale=px.colors.cyclical.IceFire, size_max=15, zoom=10)
 #Current doesn't do anything on click :(
 def update_point(trace, points, selector):
     c = list(scatter.marker.color)
@@ -34,6 +36,8 @@ def update_point(trace, points, selector):
             scatter.marker.color = c
             scatter.marker.size = s
 #Placing a point on the graph
+
+"""
 fig.add_trace(go.Scattermapbox(
         lat=site_lat,
         lon=site_lon,
@@ -49,6 +53,7 @@ fig.add_trace(go.Scattermapbox(
 )
 #Contrast on trace (Not enabled currently)
 """
+"""
 fig.add_trace(go.Scattermapbox(
         lat=site_lat,
         lon=site_lon,
@@ -60,6 +65,7 @@ fig.add_trace(go.Scattermapbox(
         ),
         hoverinfo='text'
     ))
+"""
 """
 #Update on resize
 fig.update_layout(
@@ -76,20 +82,41 @@ fig.update_layout(
         ),
         pitch=0,
         zoom=3,
-        style='mapbox://styles/srepho/cjttho6dl0hl91fmzwyicqkzf'
+        style='dark'
     ),
 )
-
+"""
 fig1 = make_subplots(
-    rows=2, cols=1,
+    rows=4, cols=1,
     shared_xaxes=True,
     vertical_spacing=0.03,
     specs=[[{"type": "table"}],
-           [{"type": "box"}]]
+           [{"type": "box"}],
+           [{"type": "violin"}],
+           [{"type": "scatter"}]]
+)
+fig1.add_trace(
+    go.Scatter(
+        y=mass,
+        x=year,
+        
+        name="Asteroid Date v Mass Scatter Plot"
+    ),
+    row=4, col=1
+)
+fig1.add_trace(
+    go.Violin(
+        x=mass,
+        name="Asteroid Mass Violin Plot"
+    ),
+    row=3, col=1
 )
 fig1.add_trace(
     go.Box(
         x=mass,
+        notched=True,
+        fillcolor= 'purple',
+        jitter=0.3,
         name="Asteroid Mass Box Plot"
     ),
     row=2, col=1
@@ -106,7 +133,6 @@ fig1.add_trace(
         cells=dict(
             values=[df[k].tolist() for k in df.columns[0:9]],
             align = "left"),
-        sorted = True
     ),
     row=1, col=1
 )
@@ -115,6 +141,19 @@ fig1.update_layout(
     showlegend=False,
     title_text="Meteor Data from 1850-2020",
 )
+#Deprecated Dropdown menu
+"""
+    dcc.Dropdown(
+    options=[
+        {'label': 'Sort by Mass', 'value': 'mass'},
+        {'label': 'Sort by Fall (fell vs found)', 'value': 'fall'},
+        {'label': 'Sort by Year', 'value': 'year'},
+        {'label': 'Sort by Name', 'value': 'name'},
+    ],
+    value='name',
+    clearable=False
+    ),
+    """,
 #Dash App Layout
 app.layout = html.Div(children=[
     html.H1(children='Meteor Viewer'),
@@ -128,19 +167,8 @@ app.layout = html.Div(children=[
         figure = fig
     ),
     html.H2(children = ''' '''),
-    #Deprecated Dropdown menu
-    """
-    dcc.Dropdown(
-    options=[
-        {'label': 'Sort by Mass', 'value': 'mass'},
-        {'label': 'Sort by Fall (fell vs found)', 'value': 'fall'},
-        {'label': 'Sort by Year', 'value': 'year'},
-        {'label': 'Sort by Name', 'value': 'name'},
-    ],
-    value='name',
-    clearable=False
-    ),
-    """,
+    
+    
     dcc.Graph(
         id='my-graph-2',
         figure = fig1
