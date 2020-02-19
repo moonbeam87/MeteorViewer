@@ -23,8 +23,9 @@ mass = df.mass
 year = df.year
 recclass = df.recclass
 colorIdentifier = mass
-fig = px.scatter_mapbox(df, lat="reclat", lon="reclong", color="mass", size="mass",
-    color_continuous_scale=px.colors.cyclical.IceFire, size_max=15, zoom=10)
+px.set_mapbox_access_token(mapbox_access_token)
+fig = px.scatter_mapbox(df, lat="reclat", lon="reclong", color="mass", mapbox_style= "dark",
+    color_continuous_scale=px.colors.cyclical.IceFire, size_max=35, zoom=10)
 #Current doesn't do anything on click :(
 def update_point(trace, points, selector):
     c = list(scatter.marker.color)
