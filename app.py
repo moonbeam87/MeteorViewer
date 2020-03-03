@@ -4,10 +4,10 @@ import dash_html_components as html
 import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
-
+import wikipedia
 from plotly.subplots import make_subplots
 
-
+s = (wikipedia.summary("Meteor"))
 external_stylesheets = ['https://codepen.io/chriddyp/pen/dZVMbK.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 #import meteorData
@@ -24,8 +24,10 @@ year = df.year
 recclass = df.recclass
 colorIdentifier = mass
 px.set_mapbox_access_token(mapbox_access_token)
-fig = px.scatter_mapbox(df, title="Meteor Strikes Visualized by Mass",lat="reclat", lon="reclong", color="mass", mapbox_style= "light",size="mass", hover_name="name",
-    color_continuous_scale=px.colors.cyclical.HSV, size_max=150,zoom=0)
+
+custom_style = "mapbox://styles/shaz13/cjiog1iqa1vkd2soeu5eocy4i"
+fig = px.scatter_mapbox(df, title="Meteor Strikes Visualized by Mass",lat="reclat", lon="reclong", color="mass", size="mass", hover_name="name",
+    color_continuous_scale=px.colors.sequential.Inferno, size_max=120,zoom=0)
 #Current doesn't do anything on click :(
 def update_point(trace, points, selector):
     c = list(scatter.marker.color)
@@ -37,56 +39,6 @@ def update_point(trace, points, selector):
             scatter.marker.color = c
             scatter.marker.size = s
 #Placing a point on the graph
-
-"""
-fig.add_trace(go.Scattermapbox(
-        lat=site_lat,
-        lon=site_lon,
-        mode='markers',
-        marker=go.scattermapbox.Marker(
-            size=17,
-            color=colorIdentifier,
-            opacity=0.7
-        ),
-        text=locations_name,
-        hoverinfo='text'
-    )
-)
-#Contrast on trace (Not enabled currently)
-"""
-"""
-fig.add_trace(go.Scattermapbox(
-        lat=site_lat,
-        lon=site_lon,
-        mode='markers',
-        marker=go.scattermapbox.Marker(
-            size=8,
-            color='rgb(242, 177, 172)',
-            opacity=0.7
-        ),
-        hoverinfo='text'
-    ))
-"""
-"""
-#Update on resize
-fig.update_layout(
-    title='',
-    autosize=True,
-    hovermode='closest',
-    showlegend=False,
-    mapbox=dict(
-        accesstoken=mapbox_access_token,
-        bearing=0,
-        center=dict(
-            lat=38,
-            lon=-94
-        ),
-        pitch=0,
-        zoom=3,
-        style='dark'
-    ),
-)
-"""
 fig1 = make_subplots(
     rows=4, cols=1,
     shared_xaxes=True,
@@ -100,7 +52,6 @@ fig1.add_trace(
     go.Scatter(
         y=mass,
         x=year,
-        
         name="Asteroid Date v Mass Scatter Plot"
     ),
     row=4, col=1
@@ -140,7 +91,7 @@ fig1.add_trace(
 fig1.update_layout(
     height=800,
     showlegend=False,
-    title_text="Meteor Data from 1850-2020",
+    title_text="Meteor Data from 1000 AD-2011",
 )
 #Deprecated Dropdown menu
 """
@@ -155,20 +106,21 @@ fig1.update_layout(
     clearable=False
     ),
     """,
+
 #Dash App Layout
 app.layout = html.Div(children=[
-    html.H1(children='Meteor Viewer'),
+    html.H1(children='Meteor Viewer V 1.0.1'),
 
-    html.H2(children='''
+    html.H3(children='''
         Meteor Viewer: A web application that allows you to see all meteor strikes!.
     '''),
-    html.H3(children='''
-        New Features: Size Bubble on MapBox Plot, Violin Plot
+    html.H4(children='''
+        New Features: Size Bubble on MapBox Plot, Wikepedia Summary
     '''),
-    html.H3(children='''
-        Upcoming Features: API, Location filtering
+    html.H4(children='''
+        Upcoming Features: API, Location filtering, Wikepedia Summary based on Dropdown
     '''),
-
+    html.Blockquote(children=s),
     dcc.Graph(
         id='my-graph',
         figure = fig
