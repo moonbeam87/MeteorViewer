@@ -7,7 +7,6 @@ import pandas as pd
 import wikipedia
 from plotly.subplots import make_subplots
 
-s = (wikipedia.summary("Meteor"))
 external_stylesheets = ['https://codepen.io/chriddyp/pen/dZVMbK.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 #import meteorData
@@ -106,27 +105,37 @@ fig1.update_layout(
     clearable=False
     ),
     """,
-
+s = ""
 #Dash App Layout
 app.layout = html.Div(children=[
-    html.H1(children='Meteor Viewer V 1.0.1'),
+    html.H1(children='Meteor Strike Viewer'),
 
     html.H3(children='''
-        Meteor Viewer: A web application that allows you to see all meteor strikes!.
+        Meteor Viewer: A web application that allows you to see all meteor strikes!
     '''),
     html.H4(children='''
-        New Features: Size Bubble on MapBox Plot, Wikepedia Summary
+        New Features: Wikepedia Summary based on Dropdown
     '''),
     html.H4(children='''
-        Upcoming Features: API, Location filtering, Wikepedia Summary based on Dropdown
+        Upcoming Features: CSV Dump, API, Location filtering
     '''),
-    html.Blockquote(children=s),
+    dcc.Dropdown(
+    id = 'WikiDropDown',
+    options=[
+        {'label': 'Info on Largest Meteor', 'value': 'sikhote alin meteorite'},
+        {'label': 'Info on Meteors', 'value': 'meteor'},
+        {'label': 'Info on NASA', 'value': 'NASA'},
+        {'label': 'Info on Meteorites', 'value': 'meteorites'},
+    ],
+    value='meteor',
+    clearable=False
+    ),
+    html.Div(id='dd-output-container'),
     dcc.Graph(
         id='my-graph',
         figure = fig
     ),
-    html.H2(children = ''' '''),
-    
+    html.H2(children = ''' '''), 
     
     dcc.Graph(
         id='my-graph-2',
@@ -134,6 +143,15 @@ app.layout = html.Div(children=[
     ),
     
 ])
+@app.callback(
+    dash.dependencies.Output('dd-output-container', 'children'),
+    [dash.dependencies.Input('WikiDropDown', 'value')])
+def update_output(value):
+    if(value == 'sikhote alin meteorite'):
+        s = wikipedia.summary(value, sentences=2)
+    else:
+        s = (wikipedia.summary(value))
+    return s
 #Run App
 if __name__ == '__main__':
     app.run_server(debug=True)
