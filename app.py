@@ -8,7 +8,8 @@ import wikipedia
 from plotly.subplots import make_subplots
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/dZVMbK.css']
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash("Meteor Strike Viewer", external_stylesheets=external_stylesheets)
+app.title = 'Meteor Strike Viewer'
 #import meteorData
 mapbox_access_token = "pk.eyJ1IjoibW9vbmJlYW04NyIsImEiOiJjazZsajRsamwwMjJuM21udjhvZzBwcnN6In0.85-_7ylp9qSaMlAvrFpRRg"
 ##replace Link with MeteorData.csv
@@ -66,7 +67,7 @@ fig1.add_trace(
     go.Box(
         x=mass,
         notched=True,
-        fillcolor= 'purple',
+        fillcolor= 'green',
         jitter=0.3,
         name="Asteroid Mass Box Plot"
     ),
@@ -122,7 +123,7 @@ app.layout = html.Div(children=[
     dcc.Dropdown(
     id = 'WikiDropDown',
     options=[
-        {'label': 'Info on Largest Meteor', 'value': 'sikhote alin meteorite'},
+        {'label': 'Info on Largest Meteor', 'value': "sikhote alin meteorite"},
         {'label': 'Info on Meteors', 'value': 'meteor'},
         {'label': 'Info on NASA', 'value': 'NASA'},
         {'label': 'Info on Meteorites', 'value': 'meteorites'},
@@ -136,7 +137,7 @@ app.layout = html.Div(children=[
         figure = fig
     ),
     html.H2(children = ''' '''), 
-    
+   
     dcc.Graph(
         id='my-graph-2',
         figure = fig1
