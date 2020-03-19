@@ -134,13 +134,15 @@ app.layout = html.Div(children=[
     html.Div(id='dd-output-container'),
     dcc.Graph(
         id='my-graph',
-        figure = fig
+        figure = fig,
+        
     ),
     html.H2(children = ''' '''), 
    
     dcc.Graph(
         id='my-graph-2',
-        figure = fig1
+        figure = fig1,
+        
     ),
     
 ])
