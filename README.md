@@ -5,3 +5,4 @@ The application was built with Plot.ly Dash, and uses only Python Libraries. The
 
 ![Screenshot1](https://github.com/moonbeam87/MeteorViewer/blob/master/screenshots/meteorviewer1.png)
 
+![Screenshot2](https://github.com/moonbeam87/MeteorViewer/blob/master/screenshots/meteorviewer2.png)
